@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(user.getRoles().stream()
-                        .map(role -> role.getName())
+                        .map(role -> "ROLE_" + role.getName())
                         .toArray(String[]::new))
                 .accountExpired(!user.isAccountNonExpired())
                 .accountLocked(!user.isAccountNonLocked())
