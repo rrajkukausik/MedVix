@@ -1,0 +1,46 @@
+# Common configuration for all microservices
+spring:
+  cloud:
+    discovery:
+      enabled: true
+    service-registry:
+      auto-registration:
+        enabled: true
+
+# Common database configuration
+database:
+  host: localhost
+  port: 5432
+  username: medivex_user
+  password: medivex_password
+  name: medivex_db
+
+# Common Redis configuration
+redis:
+  host: localhost
+  port: 6379
+  password: medivex_redis_password
+
+# Common JWT configuration
+jwt:
+  secret: medivex-jwt-secret-key-2024
+  expiration: 86400000  # 24 hours in milliseconds
+
+# Common logging configuration
+logging:
+  level:
+    com.medivex: INFO
+    org.springframework.cloud: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Common management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always

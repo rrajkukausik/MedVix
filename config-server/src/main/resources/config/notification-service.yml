@@ -1,0 +1,61 @@
+# Notification Service Configuration
+server:
+  port: 8087
+
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}_notifications
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  redis:
+    host: ${redis.host}
+    port: ${redis.port}
+    password: ${redis.password}
+
+# Eureka client configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Service specific configuration
+notification:
+  channels:
+    - EMAIL
+    - SMS
+    - PUSH
+    - IN_APP
+  templates:
+    email:
+      from: noreply@medivex.com
+      reply-to: support@medivex.com
+    sms:
+      provider: twilio
+      from: "+1234567890"
+  retry:
+    max-attempts: 3
+    delay: 5000  # milliseconds
+  batch:
+    size: 100
+    interval: 30000  # milliseconds
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
