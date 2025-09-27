@@ -16,11 +16,9 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     
     Optional<Permission> findByName(String name);
     
-    @Query("SELECT p FROM Permission p WHERE p.isActive = true")
-    List<Permission> findAllActive();
+    List<Permission> findAllByIsActiveTrue();
     
-    @Query("SELECT p FROM Permission p WHERE p.isActive = true")
-    Page<Permission> findAllActive(Pageable pageable);
+    Page<Permission> findAllByIsActiveTrue(Pageable pageable);
     
     @Query("SELECT p FROM Permission p WHERE p.isActive = true AND " +
            "(LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
@@ -29,14 +27,11 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
            "LOWER(p.action) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Permission> findBySearchTerm(@Param("search") String search, Pageable pageable);
     
-    @Query("SELECT p FROM Permission p WHERE p.isActive = true AND p.resource = :resource")
-    List<Permission> findByResource(@Param("resource") String resource);
+    List<Permission> findByResourceAndIsActiveTrue(String resource);
     
-    @Query("SELECT p FROM Permission p WHERE p.isActive = true AND p.action = :action")
-    List<Permission> findByAction(@Param("action") String action);
+    List<Permission> findByActionAndIsActiveTrue(String action);
     
-    @Query("SELECT p FROM Permission p WHERE p.isActive = true AND p.resource = :resource AND p.action = :action")
-    Optional<Permission> findByResourceAndAction(@Param("resource") String resource, @Param("action") String action);
+    Optional<Permission> findByResourceAndActionAndIsActiveTrue(String resource, String action);
     
     boolean existsByName(String name);
     
@@ -46,3 +41,4 @@ public interface PermissionRepository extends JpaRepository<Permission, Long> {
     @Query("SELECT DISTINCT p.action FROM Permission p WHERE p.isActive = true ORDER BY p.action")
     List<String> findAllDistinctActions();
 }
+

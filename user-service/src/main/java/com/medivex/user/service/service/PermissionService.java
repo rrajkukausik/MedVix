@@ -29,11 +29,11 @@ public class PermissionService {
     }
     
     public List<Permission> findAllActive() {
-        return permissionRepository.findAllActive();
+        return permissionRepository.findAllByIsActiveTrue();
     }
     
     public Page<Permission> getAllPermissions(Pageable pageable) {
-        return permissionRepository.findAllActive(pageable);
+        return permissionRepository.findAllByIsActiveTrue(pageable);
     }
     
     public Page<Permission> searchPermissions(String search, Pageable pageable) {
@@ -184,3 +184,4 @@ public class PermissionService {
         }
     }
 }
+

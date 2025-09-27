@@ -16,25 +16,21 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     
     Optional<Role> findByName(String name);
     
-    @Query("SELECT r FROM Role r WHERE r.isActive = true")
-    List<Role> findAllActive();
+    List<Role> findAllByIsActiveTrue();
     
-    @Query("SELECT r FROM Role r WHERE r.isActive = true")
-    Page<Role> findAllActive(Pageable pageable);
+    Page<Role> findAllByIsActiveTrue(Pageable pageable);
     
     @Query("SELECT r FROM Role r WHERE r.isActive = true AND " +
            "(LOWER(r.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
            "LOWER(r.description) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Role> findBySearchTerm(@Param("search") String search, Pageable pageable);
     
-    @Query("SELECT r FROM Role r WHERE r.isActive = true AND r.roleType = :roleType")
-    Page<Role> findByRoleType(@Param("roleType") Role.RoleType roleType, Pageable pageable);
+    Page<Role> findByRoleTypeAndIsActiveTrue(Role.RoleType roleType, Pageable pageable);
     
-    @Query("SELECT r FROM Role r WHERE r.isActive = true AND r.isSystemRole = :isSystemRole")
-    Page<Role> findBySystemRole(@Param("isSystemRole") Boolean isSystemRole, Pageable pageable);
+    Page<Role> findByIsSystemRoleAndIsActiveTrue(Boolean isSystemRole, Pageable pageable);
     
     boolean existsByName(String name);
     
-    @Query("SELECT r FROM Role r WHERE r.isActive = true AND r.isSystemRole = true")
-    List<Role> findAllSystemRoles();
+    List<Role> findAllByIsSystemRoleTrueAndIsActiveTrue();
 }
+

@@ -10,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -36,11 +34,11 @@ public class RoleService {
     }
     
     public List<Role> findAllActive() {
-        return roleRepository.findAllActive();
+        return roleRepository.findAllByIsActiveTrue();
     }
     
     public Page<RoleDto> getAllRoles(Pageable pageable) {
-        Page<Role> roles = roleRepository.findAllActive(pageable);
+        Page<Role> roles = roleRepository.findAllByIsActiveTrue(pageable);
         return roles.map(this::convertToRoleDto);
     }
     
