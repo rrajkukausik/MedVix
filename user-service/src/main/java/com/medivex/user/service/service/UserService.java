@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -235,7 +234,7 @@ public class UserService implements UserDetailsService {
     
     // Admin methods
     public Page<UserProfileDto> getAllUsers(Pageable pageable) {
-        Page<User> users = userRepository.findAllActive(pageable);
+        Page<User> users = userRepository.findAllByDeletedAtIsNull(pageable);
         return users.map(this::convertToUserProfileDto);
     }
     
@@ -322,6 +321,89 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         
         log.info("Role {} removed from user {}", role.getName(), user.getUsername());
+    }
+    
+    public void initializeDefaultUsers() {
+        log.info("Initializing default users for all roles");
+
+        createUserIfNotExists(
+            "admin",
+            "admin@medivex.com",
+            "Admin@123",
+            "Admin",
+            "User",
+            "ADMIN"
+        );
+
+        createUserIfNotExists(
+            "pharmacist",
+            "pharmacist@medivex.com",
+            "Pharma@123",
+            "Pharma",
+            "Cist",
+            "PHARMACIST"
+        );
+
+        createUserIfNotExists(
+            "cashier",
+            "cashier@medivex.com",
+            "Cashier@123",
+            "Cash",
+            "Ier",
+            "CASHIER"
+        );
+
+        createUserIfNotExists(
+            "dealer",
+            "dealer@medivex.com",
+            "Dealer@123",
+            "Deal",
+            "Er",
+            "DEALER"
+        );
+
+        createUserIfNotExists(
+            "reportviewer",
+            "reportviewer@medivex.com",
+            "Report@123",
+            "Report",
+            "Viewer",
+            "REPORT_VIEWER"
+        );
+
+        createUserIfNotExists(
+            "support",
+            "support@medivex.com",
+            "Support@123",
+            "Support",
+            "Agent",
+            "SUPPORT"
+        );
+    }
+
+    private void createUserIfNotExists(String username, String email, String password, String firstName, String lastName, String roleName) {
+        if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
+            log.info("User {} already exists, skipping.", username);
+            return;
+        }
+
+        User user = User.builder()
+                .username(username)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .firstName(firstName)
+                .lastName(lastName)
+                .emailVerified(true)
+                .accountStatus(User.AccountStatus.ACTIVE)
+                .roles(new HashSet<>())
+                .build();
+
+        Role role = roleService.findByName(roleName)
+                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+        user.getRoles().add(role);
+
+        userRepository.save(user);
+        log.info("Created user: {} with role: {}", username, roleName);
     }
     
     private UserProfileDto convertToUserProfileDto(User user) {

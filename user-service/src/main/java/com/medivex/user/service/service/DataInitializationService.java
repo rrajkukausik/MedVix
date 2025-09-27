@@ -27,26 +27,14 @@ public class DataInitializationService implements CommandLineRunner {
             roleService.initializeDefaultRoles();
             log.info("Default roles initialized");
             
-            // Create default admin user if it doesn't exist
-            createDefaultAdminUser();
+            // Initialize default users for all roles
+            userService.initializeDefaultUsers();
+            log.info("Default users initialized");
             
             log.info("Data initialization completed successfully");
         } catch (Exception e) {
             log.error("Error during data initialization: {}", e.getMessage(), e);
         }
     }
-    
-    private void createDefaultAdminUser() {
-        try {
-            if (!userService.findByUsername("admin").isPresent()) {
-                log.info("Creating default admin user");
-                
-                // This would need to be implemented in UserService
-                // For now, we'll just log that it should be created
-                log.info("Default admin user should be created manually with username: admin, password: admin123");
-            }
-        } catch (Exception e) {
-            log.warn("Could not check/create default admin user: {}", e.getMessage());
-        }
-    }
 }
+

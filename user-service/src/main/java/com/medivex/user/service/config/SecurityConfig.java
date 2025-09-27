@@ -5,7 +5,6 @@ import com.medivex.user.service.security.JwtAuthenticationFilter;
 import com.medivex.user.service.service.TokenBlacklistService;
 import com.medivex.user.service.service.UserService;
 import com.medivex.user.service.util.JwtUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -76,6 +75,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/users/register").permitAll() // <-- Add this line
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 
@@ -107,3 +107,4 @@ public class SecurityConfig {
         return source;
     }
 }
+

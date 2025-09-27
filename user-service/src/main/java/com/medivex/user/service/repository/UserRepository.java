@@ -25,40 +25,34 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByPasswordResetToken(String token);
     
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
-    Page<User> findAllActive(Pageable pageable);
+    Page<User> findAllByDeletedAtIsNull(Pageable pageable);
     
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND " +
-           "(LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%')))")
-    Page<User> findBySearchTerm(@Param("search") String search, Pageable pageable);
+    Page<User> findAllByDeletedAtIsNullAndAccountStatus(User.AccountStatus status, Pageable pageable);
     
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.accountStatus = :status")
-    Page<User> findByAccountStatus(@Param("status") User.AccountStatus status, Pageable pageable);
+    Page<User> findAllByDeletedAtIsNullAndEmailVerified(Boolean verified, Pageable pageable);
     
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.emailVerified = :verified")
-    Page<User> findByEmailVerified(@Param("verified") Boolean verified, Pageable pageable);
-    
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.createdAt BETWEEN :startDate AND :endDate")
-    Page<User> findByCreatedDateRange(@Param("startDate") LocalDateTime startDate, 
-                                     @Param("endDate") LocalDateTime endDate, 
+    Page<User> findAllByDeletedAtIsNullAndCreatedAtBetween(LocalDateTime startDate, 
+                                     LocalDateTime endDate, 
                                      Pageable pageable);
     
-    @Query("SELECT COUNT(u) FROM User u WHERE u.deletedAt IS NULL")
-    long countActiveUsers();
+    long countByDeletedAtIsNull();
     
-    @Query("SELECT COUNT(u) FROM User u WHERE u.deletedAt IS NULL AND u.accountStatus = :status")
-    long countByAccountStatus(@Param("status") User.AccountStatus status);
+    long countByDeletedAtIsNullAndAccountStatus(User.AccountStatus status);
     
-    @Query("SELECT COUNT(u) FROM User u WHERE u.deletedAt IS NULL AND u.emailVerified = :verified")
-    long countByEmailVerified(@Param("verified") Boolean verified);
+    long countByDeletedAtIsNullAndEmailVerified(Boolean verified);
     
     boolean existsByUsername(String username);
     
     boolean existsByEmail(String email);
     
-    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND u.accountLockedUntil IS NOT NULL AND u.accountLockedUntil > :now")
-    List<User> findLockedAccounts(@Param("now") LocalDateTime now);
+    List<User> findAllByDeletedAtIsNullAndAccountLockedUntilIsNotNullAndAccountLockedUntilAfter(LocalDateTime now);
+
+    @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL AND (" +
+           "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%'))" +
+           ")")
+    Page<User> findBySearchTerm(@Param("search") String search, Pageable pageable);
 }
+

@@ -27,7 +27,11 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequest) {
+        if (loginRequest.getUsernameOrEmail() == null || loginRequest.getUsernameOrEmail().isEmpty() ||
+            loginRequest.getPassword() == null || loginRequest.getPassword().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username/email and password are required"));
+        }
         log.info("User login request for: {}", loginRequest.getUsernameOrEmail());
         JwtResponseDto response = authService.login(loginRequest);
         return ResponseEntity.ok(response);
@@ -92,3 +96,4 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Password reset successfully"));
     }
 }
+
