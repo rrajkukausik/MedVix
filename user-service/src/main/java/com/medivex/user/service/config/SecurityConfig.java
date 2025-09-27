@@ -53,6 +53,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setHideUserNotFoundExceptions(false);
         return authProvider;
     }
     
@@ -75,9 +76,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/users/register").permitAll() // <-- Add this line
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                
+                // User profile endpoints (authenticated users)
+                .requestMatchers("/api/users/me/**").authenticated()
                 
                 // Admin endpoints
                 .requestMatchers("/api/users/**").hasAnyRole("ADMIN", "PHARMACIST")
@@ -89,6 +92,7 @@ public class SecurityConfig {
             );
         
         http.authenticationProvider(authenticationProvider());
+        // Only add JWT filter for non-auth endpoints
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
