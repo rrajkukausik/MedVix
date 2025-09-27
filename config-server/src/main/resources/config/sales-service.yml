@@ -1,0 +1,56 @@
+# Sales Service Configuration
+server:
+  port: 8084
+
+spring:
+  application:
+    name: sales-service
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}_sales
+    username: ${database.username}
+    password: ${database.password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Eureka client configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+# Service specific configuration
+sales:
+  tax:
+    rate: 0.18  # 18% GST
+    calculation:
+      method: inclusive
+  discount:
+    max-percentage: 20
+    bulk-threshold: 1000
+  payment:
+    methods:
+      - CASH
+      - CARD
+      - UPI
+      - NET_BANKING
+  invoice:
+    prefix: "INV"
+    number-length: 8
+    auto-generate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
