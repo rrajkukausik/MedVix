@@ -7,61 +7,63 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/api/users/**
-          filters:
-            - StripPrefix=2
-        - id: medicine-service
-          uri: lb://medicine-service
-          predicates:
-            - Path=/api/medicines/**
-          filters:
-            - StripPrefix=2
-        - id: inventory-service
-          uri: lb://inventory-service
-          predicates:
-            - Path=/api/inventory/**
-          filters:
-            - StripPrefix=2
-        - id: sales-service
-          uri: lb://sales-service
-          predicates:
-            - Path=/api/sales/**
-          filters:
-            - StripPrefix=2
-        - id: customer-service
-          uri: lb://customer-service
-          predicates:
-            - Path=/api/customers/**
-          filters:
-            - StripPrefix=2
-        - id: dealer-service
-          uri: lb://dealer-service
-          predicates:
-            - Path=/api/dealers/**
-          filters:
-            - StripPrefix=2
-        - id: notification-service
-          uri: lb://notification-service
-          predicates:
-            - Path=/api/notifications/**
-          filters:
-            - StripPrefix=2
-        - id: reporting-service
-          uri: lb://reporting-service
-          predicates:
-            - Path=/api/reports/**
-          filters:
-            - StripPrefix=2
-        - id: billscan-service
-          uri: lb://billscan-service
-          predicates:
-            - Path=/api/billscan/**
-          filters:
-            - StripPrefix=2
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/user-service/**
+              filters:
+                - StripPrefix=1
+            - id: medicine-service
+              uri: lb://medicine-service
+              predicates:
+                - Path=/api/medicines/**
+              filters:
+                - StripPrefix=2
+            - id: inventory-service
+              uri: lb://inventory-service
+              predicates:
+                - Path=/api/inventory/**
+              filters:
+                - StripPrefix=2
+            - id: sales-service
+              uri: lb://sales-service
+              predicates:
+                - Path=/api/sales/**
+              filters:
+                - StripPrefix=2
+            - id: customer-service
+              uri: lb://customer-service
+              predicates:
+                - Path=/api/customers/**
+              filters:
+                - StripPrefix=2
+            - id: dealer-service
+              uri: lb://dealer-service
+              predicates:
+                - Path=/api/dealers/**
+              filters:
+                - StripPrefix=2
+            - id: notification-service
+              uri: lb://notification-service
+              predicates:
+                - Path=/api/notifications/**
+              filters:
+                - StripPrefix=2
+            - id: reporting-service
+              uri: lb://reporting-service
+              predicates:
+                - Path=/api/reports/**
+              filters:
+                - StripPrefix=2
+            - id: billscan-service
+              uri: lb://billscan-service
+              predicates:
+                - Path=/api/billscan/**
+              filters:
+                - StripPrefix=2
 
 # Eureka client configuration
 eureka:
