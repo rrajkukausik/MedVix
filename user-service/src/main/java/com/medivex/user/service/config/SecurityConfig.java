@@ -74,8 +74,9 @@ public class SecurityConfig {
             .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
+                // Public endpoints - these should be accessible without authentication
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 
@@ -92,7 +93,7 @@ public class SecurityConfig {
             );
         
         http.authenticationProvider(authenticationProvider());
-        // Only add JWT filter for non-auth endpoints
+        // Add JWT filter for all endpoints - the filter itself handles skipping auth endpoints
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
