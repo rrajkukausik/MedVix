@@ -1,14 +1,14 @@
 # User Service Configuration
 server:
-  port: 8081
+  port: 8001
 
 spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}_users
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:postgresql://localhost:5432/medvix_user
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,10 +17,40 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-  redis:
-    host: ${redis.host}
-    port: ${redis.port}
-    password: ${redis.password}
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: m29400511@gmail.com
+    password: medvix1234
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# JWT Configuration
+jwt:
+  secret: medvix-jwt-secret-key-for-user-service-authentication-2025
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+# Security Configuration
+security:
+  jwt:
+    header: Authorization
+    prefix: Bearer
 
 # Eureka client configuration
 eureka:
@@ -30,22 +60,23 @@ eureka:
   instance:
     prefer-ip-address: true
 
-# Service specific configuration
-user:
-  jwt:
-    secret: ${jwt.secret}
-    expiration: ${jwt.expiration}
-  password:
-    min-length: 8
-    require-special-chars: true
-  session:
-    timeout: 1800  # 30 minutes
+# Application specific configuration
+app:
+  frontend:
+    url: http://localhost:3000
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,refresh
   endpoint:
     health:
       show-details: always
+
+# Logging
+logging:
+  level:
+    com.medivex.user.service: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
