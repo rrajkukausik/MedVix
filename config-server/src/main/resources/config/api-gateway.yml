@@ -7,15 +7,11 @@ spring:
     name: api-gateway
   cloud:
     gateway:
-      server:
-        webflux:
-          routes:
+      routes:
             - id: user-service
-              uri: lb://USER-SERVICE
+              uri: lb://user-service
               predicates:
-                - Path=/user-service/**
-              filters:
-                - StripPrefix=1
+                - Path=/api/auth/**,/api/users/**
             - id: medicine-service
               uri: lb://medicine-service
               predicates:

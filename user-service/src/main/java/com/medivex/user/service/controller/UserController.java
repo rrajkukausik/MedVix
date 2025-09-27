@@ -2,6 +2,7 @@ package com.medivex.user.service.controller;
 
 import com.medivex.user.service.dto.*;
 import com.medivex.user.service.service.UserService;
+import com.medivex.user.service.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,14 @@ import java.util.Map;
 public class UserController {
     
     private final UserService userService;
+    private final AuthService authService;
+    
+    @PostMapping("/register")
+    public ResponseEntity<UserProfileDto> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
+        log.info("User registration request for: {}", registrationDto.getUsername());
+        UserProfileDto userProfile = authService.register(registrationDto);
+        return ResponseEntity.ok(userProfile);
+    }
     
     @GetMapping("/me")
     public ResponseEntity<UserProfileDto> getMyProfile(Authentication authentication) {
