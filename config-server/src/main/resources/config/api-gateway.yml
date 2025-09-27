@@ -77,6 +77,33 @@ cors:
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: "*"
 
+# Circuit breaker configuration
+resilience4j:
+  circuitbreaker:
+    instances:
+      user-service:
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        sliding-window-size: 10
+      medicine-service:
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        sliding-window-size: 10
+      inventory-service:
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        sliding-window-size: 10
+
+# Rate limiting (disabled for now - requires Redis)
+# spring:
+#   cloud:
+#     gateway:
+#       default-filters:
+#         - name: RequestRateLimiter
+#           args:
+#             redis-rate-limiter.replenishRate: 10
+#             redis-rate-limiter.burstCapacity: 20
+
 management:
   endpoints:
     web:
