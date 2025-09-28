@@ -8,16 +8,18 @@ spring:
   cloud:
     gateway:
       routes:
-            - id: user-service
+            - id: user-service-auth
               uri: lb://user-service
               predicates:
-                - Path=/api/auth/**,/api/users/**
+                - Path=/api/auth/**
+            - id: user-service-users
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**
             - id: medicine-service
               uri: lb://medicine-service
               predicates:
                 - Path=/api/medicines/**
-              filters:
-                - StripPrefix=2
             - id: inventory-service
               uri: lb://inventory-service
               predicates:
@@ -60,6 +62,8 @@ spring:
                 - Path=/api/billscan/**
               filters:
                 - StripPrefix=2
+      actuator:
+        enabled: true
 
 # Eureka client configuration
 eureka:
@@ -106,7 +110,9 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,refresh,gateway
   endpoint:
     health:
       show-details: always
+    gateway:
+      enabled: true

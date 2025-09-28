@@ -6,9 +6,9 @@ spring:
   application:
     name: medicine-service
   datasource:
-    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}_medicines
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:postgresql://localhost:5432/medvix_medicines
+    username: postgres
+    password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -17,6 +17,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# JWT Configuration
+jwt:
+  secret: medvix-jwt-secret-key-for-user-service-authentication-2025
 
 # Eureka client configuration
 eureka:
@@ -49,7 +53,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,refresh,gateway
   endpoint:
     health:
       show-details: always
