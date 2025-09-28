@@ -79,6 +79,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/health").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers("/error", "/error/**").permitAll()
                 
                 // User profile endpoints (authenticated users)
                 .requestMatchers("/api/users/me/**").authenticated()
